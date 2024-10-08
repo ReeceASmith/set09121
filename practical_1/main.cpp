@@ -19,13 +19,14 @@ const float paddleMaxY = gameHeight - paddleOffsetWall - paddleSize.y / 2.f;
 const float paddleMinY = paddleOffsetWall + paddleSize.y / 2.f;
 
 Vector2f ballVelocity;
-bool isPlayer1Serving = false;
+bool isPlayer1Serving = true;
 const float initialVelocityX = 200.f;
 const float initialVelocityY = 120.f;
 const float velocityMultiplier = 1.1f;
 
 CircleShape ball;
 RectangleShape paddles[2];
+int points[2] = { 0, 0 };
 
 
 void Load() {
@@ -105,14 +106,49 @@ void Update(RenderWindow& window) {
 		ballVelocity.x *= velocityMultiplier;
 		ballVelocity.y *= -velocityMultiplier;
 		ball.move(Vector2f(0.f, -10.f));
-	} else if ((by - ballRadius) < 0) { // Top wall
+	}
+	else if ((by - ballRadius) < 0) { // Top wall
 		ballVelocity.x *= velocityMultiplier;
 		ballVelocity.y *= -velocityMultiplier;
 		ball.move(Vector2f(0.f, 10.f));
-	} else if ((bx + ballRadius) > gameWidth) { // Right wall
+	}
+	else if ((bx + ballRadius) > gameWidth) { // Right wall
+		// Add point to player1 and set serve to player2
+		points[0] += 1;
+		isPlayer1Serving = false;
+		// Reset
 		Reset();
-	} else if ((bx - ballRadius) < 0) { // Left wall
+	}
+	else if ((bx - ballRadius) < 0) { // Left wall
+		// Add point to player2 and set serve to player1
+		points[1] += 1;
+		isPlayer1Serving = true;
+		// Reset
 		Reset();
+	}
+	else if (
+		// Ball is inline or behind (left) paddle AND
+		(bx - ballRadius) < paddleSize.x + paddleOffsetWall &&
+		// Ball is below top edge of paddle AND
+		by > paddlePosition[0].y - (paddleSize.y * 0.5) &&
+		// Ball is above bottom edge of paddle
+		by < paddlePosition[0].y + (paddleSize.y * 0.5)
+	) {
+		// Bounce off left paddle
+		ballVelocity.x *= -1;
+		ball.move(sf::Vector2f(5, 0));
+	}
+	else if (
+		// Ball is inline or behind (right) paddle AND
+		(bx + ballRadius) > gameWidth - paddleSize.x - paddleOffsetWall &&
+		// Ball is below top edge of paddle AND
+		by > paddlePosition[1].y - (paddleSize.y * 0.5) &&
+		// Ball is above bottom edge of paddle
+		by < paddlePosition[1].y + (paddleSize.y * 0.5)
+	) {
+		// Bounce off right paddle
+		ballVelocity.x *= -1;
+		ball.move(sf::Vector2f(-5, 0));
 	}
 }
 
