@@ -20,3 +20,18 @@ CircleShape ball;
 RectangleShape paddles[2];
 
 
+void Load() {
+	// Set size and origin of paddles
+	for (auto& p : paddles) {
+		p.setSize(paddleSize);
+		p.setOrigin(paddleSize / 2.f);
+	}
+	// Set size and origin of balls
+	ball.setRadius(ballRadius);
+	ball.setOrigin(Vector2f(ballRadius / 2.f, ballRadius / 2.f));
+	// Reset paddle position
+	paddles[0].setPosition(Vector2f(paddleOffsetWall + paddleSize.x / 2.f, gameHeight / 2.f));
+	paddles[1].setPosition(Vector2f(gameWidth - paddleOffsetWall - paddleSize.x / 2.f, gameHeight / 2.f));
+	// Reset ball position
+	ball.setPosition(gameHeight / 2.f, gameWidth / 2.f);
+}
