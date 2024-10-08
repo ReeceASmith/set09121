@@ -37,6 +37,10 @@ void Load() {
 	// Set size and origin of balls
 	ball.setRadius(ballRadius);
 	ball.setOrigin(sf::Vector2f(ballRadius / 2.f, ballRadius / 2.f));
+}
+
+
+void Reset() {
 	// Reset paddle position
 	paddles[0].setPosition(sf::Vector2f(paddleOffsetWall + paddleSize.x / 2.f, gameHeight / 2.f));
 	paddles[1].setPosition(sf::Vector2f(gameWidth - paddleOffsetWall - paddleSize.x / 2.f, gameHeight / 2.f));
@@ -105,8 +109,11 @@ void Update(RenderWindow& window) {
 		ballVelocity.x *= velocityMultiplier;
 		ballVelocity.y *= -velocityMultiplier;
 		ball.move(Vector2f(0.f, 10.f));
+	} else if ((bx + ballRadius) > gameWidth) { // Right wall
+		Reset();
+	} else if ((bx - ballRadius) < 0) { // Left wall
+		Reset();
 	}
-	paddles[0].move(Vector2f(0.f, direction * paddleSpeed * dt));
 }
 
 
@@ -121,6 +128,7 @@ void Render(RenderWindow& window) {
 int main() {
 	RenderWindow window(VideoMode(gameWidth, gameHeight), "PONG");
 	Load();
+	Reset();
 	while (window.isOpen()) {
 		window.clear();
 		Update(window);
