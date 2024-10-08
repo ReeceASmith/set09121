@@ -20,9 +20,13 @@ const float paddleMinY = paddleOffsetWall + paddleSize.y / 2.f;
 
 Vector2f ballVelocity;
 bool isPlayer1Serving = true;
+bool AIEnabled = true;
+bool isPlayer1AI = true;
 const float initialVelocityX = 200.f;
 const float initialVelocityY = 120.f;
 const float velocityMultiplier = 1.1f;
+bool iKeyOn = false;
+bool sKeyOn = false;
 
 CircleShape ball;
 RectangleShape paddles[2];
@@ -70,30 +74,87 @@ void Update(RenderWindow& window) {
 		window.close();
 	}
 
+
+	// Turn on AI
+	if (Keyboard::isKeyPressed(Keyboard::I)) {
+		if (!iKeyOn) {
+			iKeyOn = true;
+			AIEnabled = !AIEnabled;
+		}
+	} else if (iKeyOn) {
+		iKeyOn = false;
+	}
+
+	// Swap AI player
+	if (Keyboard::isKeyPressed(Keyboard::S)) {
+		if (!sKeyOn) {
+			sKeyOn = true;
+			isPlayer1AI = !isPlayer1AI;
+		}
+	}
+	else if (sKeyOn) {
+		sKeyOn = false;
+	}
+
+
 	// Handle paddle movement
 	float direction1 = 0.f;
-	if (Keyboard::isKeyPressed(controls[0])) {
-		direction1--;
+	float direction2 = 0.f;
+	Vector2f paddlePosition[2] = { paddles[0].getPosition(), paddles[1].getPosition() };
+
+	// If player 1 is a real person, or AI is not enabled
+	if (!isPlayer1AI || !AIEnabled) {
+		printf("player1\n");
+		if (Keyboard::isKeyPressed(controls[0]))
+		{
+			direction1--;
+		}
+		if (Keyboard::isKeyPressed(controls[1]))
+		{
+			direction1++;
+		}
 	}
-	if (Keyboard::isKeyPressed(controls[1])) {
-		direction1++;
+	if (isPlayer1AI || !AIEnabled) {
+		printf("player2\n");
+		if (Keyboard::isKeyPressed(controls[2]))
+		{
+			direction2--;
+		}
+		if (Keyboard::isKeyPressed(controls[3]))
+		{
+			direction2++;
+		}
 	}
+
+
+	if (AIEnabled) {
+		if (isPlayer1AI) {
+			if (ball.getPosition().y < paddlePosition[0].y) {
+				direction1 = -1.f;
+			}
+			else if (ball.getPosition().y > paddlePosition[0].y) {
+				direction1 = 1.f;
+			}
+		}
+		else {
+			if (ball.getPosition().y < paddlePosition[1].y) {
+				direction2 = -1.f;
+			}
+			else if (ball.getPosition().y > paddlePosition[1].y) {
+				direction2 = 1.f;
+			}
+		}
+	}
+
 	paddles[0].move(sf::Vector2f(0.f, direction1 * paddleSpeed * dt));
-	Vector2f paddlePosition[2];
 	paddlePosition[0] = paddles[0].getPosition();
 	paddles[0].setPosition(sf::Vector2f(paddlePosition[0].x, min(paddleMaxY, max(paddleMinY, paddlePosition[0].y))));
 
-
-	float direction2 = 0.f;
-	if (Keyboard::isKeyPressed(controls[2])) {
-		direction2--;
-	}
-	if (Keyboard::isKeyPressed(controls[3])) {
-		direction2++;
-	}
 	paddles[1].move(sf::Vector2f(0.f, direction2 * paddleSpeed * dt));
 	paddlePosition[1] = paddles[1].getPosition();
 	paddles[1].setPosition(sf::Vector2f(paddlePosition[1].x, min(paddleMaxY, max(paddleMinY, paddlePosition[1].y))));
+
+
 
 
 	// Move the ball
