@@ -76,5 +76,13 @@ void Render(RenderWindow& window) {
 
 
 int main() {
-	
+	RenderWindow window(VideoMode(gameWidth, gameHeight), "PONG");
+	Load();
+	while (window.isOpen()) {
+		window.clear();
+		Update(window);
+		Render(window);
+		window.display();
+	}
+	return 0;
 }
