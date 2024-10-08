@@ -65,3 +65,16 @@ void Update(RenderWindow& window) {
 	}
 	paddles[0].move(Vector2f(0.f, direction * paddleSpeed * dt));
 }
+
+
+void Render(RenderWindow& window) {
+	// Draw everything
+	window.draw(paddles[0]);
+	window.draw(paddles[1]);
+	window.draw(ball);
+}
+
+
+int main() {
+	
+}
