@@ -30,6 +30,9 @@ bool sKeyOn = false;
 
 CircleShape ball;
 RectangleShape paddles[2];
+Font font;
+Text pointsText;
+
 int points[2] = { 0, 0 };
 
 
@@ -42,6 +45,16 @@ void Load() {
 	// Set size and origin of balls
 	ball.setRadius(ballRadius);
 	ball.setOrigin(sf::Vector2f(ballRadius / 2.f, ballRadius / 2.f));
+
+
+	// Load font-face from res dir
+	font.loadFromFile("res/fonts/RedHatText.ttf");
+	// Set text element to use font
+	pointsText.setFont(font);
+	// Set character size to 24 pixels
+	pointsText.setCharacterSize(24);
+	pointsText.setColor(sf::Color(255, 255, 255, 255));
+	
 }
 
 
@@ -52,6 +65,11 @@ void Reset() {
 	// Reset ball position
 	ball.setPosition(gameWidth / 2.f, gameHeight / 2.f);
 	ballVelocity = { (isPlayer1Serving ? initialVelocityX : -initialVelocityX), initialVelocityY };
+
+	// Update score text
+	pointsText.setString("Score: " + to_string(points[0]) + " | " + to_string(points[1]));
+	// Keep score text centered
+	pointsText.setPosition((gameWidth * .5f) - (pointsText.getLocalBounds().width * .5f), 10);
 }
 
 
@@ -104,7 +122,6 @@ void Update(RenderWindow& window) {
 
 	// If player 1 is a real person, or AI is not enabled
 	if (!isPlayer1AI || !AIEnabled) {
-		printf("player1\n");
 		if (Keyboard::isKeyPressed(controls[0]))
 		{
 			direction1--;
@@ -115,7 +132,6 @@ void Update(RenderWindow& window) {
 		}
 	}
 	if (isPlayer1AI || !AIEnabled) {
-		printf("player2\n");
 		if (Keyboard::isKeyPressed(controls[2]))
 		{
 			direction2--;
@@ -219,6 +235,7 @@ void Render(RenderWindow& window) {
 	window.draw(paddles[0]);
 	window.draw(paddles[1]);
 	window.draw(ball);
+	window.draw(pointsText);
 }
 
 
