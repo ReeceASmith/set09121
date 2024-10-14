@@ -54,7 +54,7 @@ void Load() {
 	// Set character size to 24 pixels
 	pointsText.setCharacterSize(24);
 	pointsText.setColor(sf::Color(255, 255, 255, 255));
-	
+
 }
 
 
@@ -99,7 +99,8 @@ void Update(RenderWindow& window) {
 			iKeyOn = true;
 			AIEnabled = !AIEnabled;
 		}
-	} else if (iKeyOn) {
+	}
+	else if (iKeyOn) {
 		iKeyOn = false;
 	}
 
@@ -210,7 +211,7 @@ void Update(RenderWindow& window) {
 		by > paddlePosition[0].y - (paddleSize.y * 0.5) &&
 		// Ball is above bottom edge of paddle
 		by < paddlePosition[0].y + (paddleSize.y * 0.5)
-	) {
+		) {
 		// Bounce off left paddle
 		ballVelocity.x *= -1;
 		ball.move(sf::Vector2f(5, 0));
@@ -222,7 +223,7 @@ void Update(RenderWindow& window) {
 		by > paddlePosition[1].y - (paddleSize.y * 0.5) &&
 		// Ball is above bottom edge of paddle
 		by < paddlePosition[1].y + (paddleSize.y * 0.5)
-	) {
+		) {
 		// Bounce off right paddle
 		ballVelocity.x *= -1;
 		ball.move(sf::Vector2f(-5, 0));
