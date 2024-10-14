@@ -7,10 +7,6 @@ using namespace sf;
 using namespace std;
 
 
-const int gameWidth = 100;
-const int gameHeight = 100;
-
-
 sf::Texture spritesheet;
 sf::Sprite invader;
 std::vector<Ship*> ships;
@@ -23,6 +19,9 @@ void Load() {
 	}
 	invader.setTexture(spritesheet);
 	invader.setTextureRect(IntRect(Vector2i(0, 0), Vector2i(32, 32)));
+
+	Invader* inv = new Invader(sf::IntRect(Vector2(0, 0), Vector2(32, 32)), { 100, 100 });
+	ships.push_back(inv);
 }
 
 
