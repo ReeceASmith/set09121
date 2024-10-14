@@ -1,6 +1,7 @@
 #include <iostream>
 #include <filesystem>
 #include <SFML/Graphics.hpp>
+#include "game.h"
 #include "ship.h"
 
 using namespace sf;
