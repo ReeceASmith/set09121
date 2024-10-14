@@ -1,6 +1,7 @@
 #include <iostream>
 #include <filesystem>
 #include <SFML/Graphics.hpp>
+#include "ship.h"
 
 using namespace sf;
 using namespace std;
@@ -12,11 +13,11 @@ const int gameHeight = 100;
 
 sf::Texture spritesheet;
 sf::Sprite invader;
+std::vector<Ship*> ships;
 
 
 
 void Load() {
-	cout << std::filesystem::current_path() << endl;
 	if (!spritesheet.loadFromFile("res/img/invaders_sheet.png")) {
 		cerr << "Failed to load spritesheet!" << std::endl;
 	}
