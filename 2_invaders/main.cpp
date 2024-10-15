@@ -78,6 +78,10 @@ void Load() {
 
 		ships.push_back(toPushBack);
 	}
+
+
+	// Load player
+	ships.push_back(new Player());
 }
 
 
