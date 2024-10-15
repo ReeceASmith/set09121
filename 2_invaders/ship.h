@@ -18,23 +18,27 @@ class Ship : public sf::Sprite {
 		// Explode bool
 		bool is_exploded() const;
 		bool is_alive() const;
-		void kill();
+		void Kill();
+		virtual void Reset();
 		// Explode - virtual so it can be overridden per player/invader
 		virtual void Explode();
+		// Reset - virtual so it can be overridden
 		// Update - virtual so it can be overridden, but not pure virtual
 		virtual void Update(const float& dt);
 };
 
 
 class Invader : public Ship {
+	protected:
+		sf::Vector2i textureIntRect;
 	public:
 		static bool direction;
 		static float speed;
 		static float bulletCooldownSeconds;
 		static float dtSinceLastFired;
-
 		Invader(sf::IntRect ir, sf::Vector2f pos);
 		Invader();
+		void Reset();
 		void Update(const float& dt) override;
 };
 
@@ -46,5 +50,6 @@ class Player : public Ship {
 		float dtSinceLastFired;
 	public:
 		Player();
+		void Reset();
 		void Update(const float& dt) override;
 };

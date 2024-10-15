@@ -27,10 +27,14 @@ bool Ship::is_alive() const {
 	return _alive;
 }
 
-void Ship::kill() {
+void Ship::Kill() {
 	_exploded = true;
 	_alive = false;
+}
 
+void Ship::Reset() {
+	_exploded = false;
+	_alive = true;
 }
 
 void Ship::Explode() {
@@ -42,7 +46,7 @@ void Ship::Update(const float& dt) {
 	if (is_exploded()) {
 		sinceExploded += dt;
 		if (sinceExploded >= Ship::ExplodeTime) {
-			kill();
+			Kill();
 		}
 	}
 }
@@ -55,8 +59,16 @@ Ship::~Ship() = default;
 Invader::Invader() : Ship() {}
 
 Invader::Invader(sf::IntRect ir, sf::Vector2f pos) : Ship(ir) {
+	textureIntRect = Vector2(ir.getPosition().x, ir.getPosition().y);
 	setOrigin(Vector2f(16.f, 16.f));
 	setPosition(pos);
+}
+
+void Invader::Reset() {
+	Ship::Reset();
+
+	setTextureRect(IntRect(textureIntRect, Vector2(32, 32)));
+	dtSinceLastFired = 0.f;
 }
 
 void Invader::Update(const float& dt) {
@@ -92,6 +104,13 @@ void Invader::Update(const float& dt) {
 
 
 Player::Player() : Ship(IntRect(Vector2(160, 32), Vector2(32, 32))) {
+	Player::Reset();
+}
+
+void Player::Reset() {
+	Ship::Reset();
+
+	setTextureRect(IntRect(Vector2(160, 32), Vector2(32, 32)));
 	setPosition({ gameWidth * .5f, gameHeight - 32.f });
 	dtSinceLastFired = 0.f;
 }
