@@ -44,7 +44,28 @@ void Invader::Update(const float& dt) {
 	{
 		direction = !direction;
 		for (int i = 0; i < ships.size(); ++i) {
-			ships[i]->move(Vector2f(0.f, (thisSize / 3)));
+			if (auto invader = dynamic_cast<Invader*>(ships[i])) {
+				invader->move(Vector2f(0.f, (thisSize / 3)));
+			}
 		}
+	}
+}
+
+
+Player::Player() : Ship(IntRect(Vector2(160, 32), Vector2(32, 32))) {
+	setPosition({ gameWidth * .5f, gameHeight - 32.f });
+}
+
+void Player::Update(const float& dt) {
+	Ship::Update(dt);
+
+
+	// Move left
+	if (Keyboard::isKeyPressed(Keyboard::A)) {
+		move(Vector2f(-playerSpeed * dt, 0));
+	}
+	// Move right
+	if (Keyboard::isKeyPressed(Keyboard::D)) {
+		move(Vector2f(playerSpeed * dt, 0));
 	}
 }

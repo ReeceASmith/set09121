@@ -25,3 +25,12 @@ class Invader : public Ship {
 		Invader();
 		void Update(const float& dt) override;
 };
+
+
+class Player : public Ship {
+	private:
+		float playerSpeed = 80.f;
+	public:
+		Player();
+		void Update(const float& dt) override;
+};
