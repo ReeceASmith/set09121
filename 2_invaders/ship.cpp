@@ -3,6 +3,9 @@
 using namespace sf;
 using namespace std;
 
+bool Invader::direction;
+float Invader::speed;
+
 Ship::Ship() {};
 
 Ship::Ship(IntRect ir) : Sprite() {
@@ -27,4 +30,21 @@ Invader::Invader(sf::IntRect ir, sf::Vector2f pos) : Ship(ir) {
 
 void Invader::Update(const float& dt) {
 	Ship::Update(dt);
+
+	move(Vector2f(
+		dt
+		* (direction ? 1.f : -1.f)
+		* speed,
+		0.f)
+	);
+
+	int thisSize = this->getGlobalBounds().getSize().x;
+	if ((direction && getPosition().x > gameWidth - (thisSize / 3))
+		|| (!direction && getPosition().x < (thisSize / 3)))
+	{
+		direction = !direction;
+		for (int i = 0; i < ships.size(); ++i) {
+			ships[i]->move(Vector2f(0.f, (thisSize / 3)));
+		}
+	}
 }
