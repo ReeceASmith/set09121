@@ -116,6 +116,45 @@ void Render(RenderWindow& window) {
 }
 
 
+// True if the game is over
+bool display_game_over(RenderWindow& window) {
+	// Display game over
+	Text gameOverText;
+	Text continueText;
+	Font font;
+	if (!font.loadFromFile("res/fonts/RedHatText.ttf")) {
+		cerr << "Failed to load font!" << std::endl;
+	}
+	gameOverText.setFont(font);
+	gameOverText.setString("Game Over!");
+	gameOverText.setCharacterSize(24);
+	gameOverText.setFillColor(Color::White);
+	gameOverText.setPosition(gameWidth / 2 - 50, gameHeight / 2 - 12);
+
+	continueText.setFont(font);
+	continueText.setString("Press [R] to restart, or [Q] to quit");
+	continueText.setCharacterSize(16);
+	continueText.setFillColor(Color::White);
+	continueText.setPosition(gameWidth / 2 - 100, gameHeight / 2 + 12);
+
+	Reset();
+	window.clear();
+	window.draw(gameOverText);
+	window.draw(continueText);
+	window.display();
+
+
+	while (true) {
+		if (Keyboard::isKeyPressed(Keyboard::Q)) {
+			return true;
+		}
+		if (Keyboard::isKeyPressed(Keyboard::R)) {
+			return false;
+		}
+	}
+}
+
+
 int main() {
 	RenderWindow window(VideoMode(gameWidth, gameHeight), "Space Invaders");
 	Load();
@@ -128,10 +167,20 @@ int main() {
 				window.close(); // Close window when "X" button is pressed
 			}
 		}
-		window.clear();
-		Update(window);
-		Render(window);
-		window.display();
+
+		while (player->is_alive()) {
+			window.clear();
+			Update(window);
+			Render(window);
+			window.display();
+		}
+
+		if (!display_game_over(window)) {
+			Reset();
+		}
 	}
+
+
+
 	return 0;
 }
