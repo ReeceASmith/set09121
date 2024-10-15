@@ -6,6 +6,10 @@ using namespace std;
 
 bool Invader::direction;
 float Invader::speed;
+float Player::bulletCooldownSeconds = 0.8f;
+float Invader::bulletCooldownSeconds = 1.f;
+float Ship::ExplodeTime = .2f;
+float Invader::dtSinceLastFired = 0.f;
 
 Ship::Ship() {};
 
@@ -15,7 +19,33 @@ Ship::Ship(IntRect ir) : Sprite() {
 	setTextureRect(_sprite);
 };
 
-void Ship::Update(const float& dt) {}
+bool Ship::is_exploded() const {
+	return _exploded;
+}
+
+bool Ship::is_alive() const {
+	return _alive;
+}
+
+void Ship::kill() {
+	_exploded = true;
+	_alive = false;
+
+}
+
+void Ship::Explode() {
+	setTextureRect(IntRect(Vector2(128, 32), Vector2(32, 32)));
+	_exploded = true;
+}
+
+void Ship::Update(const float& dt) {
+	if (is_exploded()) {
+		sinceExploded += dt;
+		if (sinceExploded >= Ship::ExplodeTime) {
+			kill();
+		}
+	}
+}
 
 // Define the ship deconstructor
 // Although we set this to pure virtual, we still have to define it
@@ -31,6 +61,9 @@ Invader::Invader(sf::IntRect ir, sf::Vector2f pos) : Ship(ir) {
 
 void Invader::Update(const float& dt) {
 	Ship::Update(dt);
+
+	Invader::dtSinceLastFired += dt / (invaders_columns * invaders_rows);
+
 
 	move(Vector2f(
 		dt
@@ -50,12 +83,17 @@ void Invader::Update(const float& dt) {
 			}
 		}
 	}
+
+	if (Invader::dtSinceLastFired >= (Invader::bulletCooldownSeconds) && rand() % (invaders_rows * invaders_columns * 10000000000000000) == 0) {
+		Bullet::Fire(getPosition(), true);
+		Invader::dtSinceLastFired = 0.f;
+	}
 }
 
 
 Player::Player() : Ship(IntRect(Vector2(160, 32), Vector2(32, 32))) {
 	setPosition({ gameWidth * .5f, gameHeight - 32.f });
-	dtSinceLastFired = 0;
+	dtSinceLastFired = 0.f;
 }
 
 void Player::Update(const float& dt) {
@@ -76,7 +114,7 @@ void Player::Update(const float& dt) {
 
 	// Check we are trying to fire and the cooldown time has passed
 	if (Keyboard::isKeyPressed(Keyboard::Space)
-		&& dtSinceLastFired >= bulletCooldownSeconds)
+		&& dtSinceLastFired >= Player::bulletCooldownSeconds)
 	{
 		// Reset cooldown
 		Bullet::Fire(getPosition(), false);
