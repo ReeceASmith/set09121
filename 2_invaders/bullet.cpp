@@ -16,7 +16,30 @@ void Bullet::Update(const float& dt) {
 }
 
 void Bullet::_Update(const float &dt) {
-	move(Vector2f(0, dt * 100.f * (_enemyBullet ? 1.f : -1.f)));
+	if (getPosition().y < -32.f || getPosition().y > gameHeight + 32) {
+		return;
+	}
+	else {
+		move(Vector2f(0, dt * 200.f * (_enemyBullet ? 1.f : -1.f)));
+		const FloatRect boundingBox = getGlobalBounds();
+
+		for (auto s : ships) {
+			// Player/Invader bullets don't collide with players/invaders
+			if ((s == player) == !_enemyBullet) {
+				continue;
+			}
+
+			if (!s->is_exploded()
+				&& s->getGlobalBounds().intersects(boundingBox))
+			{
+				s->Explode();
+				setPosition(-100.f, -100.f);
+				return;
+			}
+		}
+	}
+
+
 }
 
 // Renders bullets in the pool
@@ -30,8 +53,8 @@ void Bullet::Render(sf::RenderWindow& window) {
 void Bullet::Fire(const sf::Vector2f& pos, const bool enemyBullet) {
 	printf("Fire\n");
 	Bullet& bullet = Bullet::bullets[++Bullet::bulletPointer];
-	bullet.setPosition(Vector2f(pos.x + 16.f, pos.y));
-	bullet.setTextureRect(IntRect(32, 32, 32, 32));
+	bullet.setPosition(Vector2f(pos.x + 26.f, pos.y));
+	bullet.setTextureRect(IntRect((32 + 32*(enemyBullet ? 0 : 1))+10, 32, 10, 32));
 	bullet._enemyBullet = enemyBullet;
 }
 
