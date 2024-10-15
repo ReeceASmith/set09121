@@ -90,6 +90,9 @@ void Load() {
 void Reset() {
 	Invader::speed = 40.f;
 	Invader::direction = true;
+	for (auto& s : ships) {
+		s->Reset();
+	}
 }
 
 
@@ -127,31 +130,35 @@ bool display_game_over(RenderWindow& window) {
 	}
 	gameOverText.setFont(font);
 	gameOverText.setString("Game Over!");
-	gameOverText.setCharacterSize(24);
+	gameOverText.setCharacterSize(28);
 	gameOverText.setFillColor(Color::White);
-	gameOverText.setPosition(gameWidth / 2 - 50, gameHeight / 2 - 12);
+	gameOverText.setPosition(gameWidth / 2 - gameOverText.getGlobalBounds().width / 2, gameHeight / 2 - gameOverText.getGlobalBounds().height - 20);
 
 	continueText.setFont(font);
 	continueText.setString("Press [R] to restart, or [Q] to quit");
-	continueText.setCharacterSize(16);
+	continueText.setCharacterSize(20);
 	continueText.setFillColor(Color::White);
-	continueText.setPosition(gameWidth / 2 - 100, gameHeight / 2 + 12);
+	continueText.setPosition(gameWidth / 2 - continueText.getGlobalBounds().width / 2, gameHeight / 2 - continueText.getGlobalBounds().height + 20);
 
-	Reset();
-	window.clear();
-	window.draw(gameOverText);
-	window.draw(continueText);
-	window.display();
-
-
+	bool ret = false;
 	while (true) {
+		window.clear();
+		window.draw(gameOverText);
+		window.draw(continueText);
+		window.display();
+
 		if (Keyboard::isKeyPressed(Keyboard::Q)) {
-			return true;
+			ret = true;
+			break;
 		}
 		if (Keyboard::isKeyPressed(Keyboard::R)) {
-			return false;
+			ret = false;
+			break;
 		}
 	}
+	printf("Reached\n");
+
+	return ret;
 }
 
 
@@ -178,6 +185,7 @@ int main() {
 		if (!display_game_over(window)) {
 			Reset();
 		}
+		else { break; }
 	}
 
 

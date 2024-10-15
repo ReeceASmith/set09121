@@ -36,6 +36,13 @@ target_include_directories(2_INVADERS PRIVATE ${SFML_INCS})
 set(EXECUTABLES ${EXECUTABLES} 2_INVADERS)
 
 
+## Tile Engine
+file(GLOB_RECURSE SOURCES 3_tile_engine/*.cpp 3_tile_engine/*.h)
+add_executable(3_TILE_ENGINE ${SOURCES})
+target_include_directories(3_TILE_ENGINE PRIVATE ${SFML_INCS})
+set(EXECUTABLES ${EXECUTABLES} 3_TILE_ENGINE)
+
+
 ### Link Dependencies ###
 foreach (exe ${EXECUTABLES})
 	# Set working directory to build dir in visual studio
