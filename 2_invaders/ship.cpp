@@ -1,5 +1,6 @@
-#include "ship.h"
 #include "game.h"
+#include "ship.h"
+#include "bullet.h"
 using namespace sf;
 using namespace std;
 
@@ -54,10 +55,14 @@ void Invader::Update(const float& dt) {
 
 Player::Player() : Ship(IntRect(Vector2(160, 32), Vector2(32, 32))) {
 	setPosition({ gameWidth * .5f, gameHeight - 32.f });
+	dtSinceLastFired = 0;
 }
 
 void Player::Update(const float& dt) {
 	Ship::Update(dt);
+	
+	static vector<Bullet*> bullets;
+	dtSinceLastFired += dt;
 
 
 	// Move left
@@ -67,5 +72,18 @@ void Player::Update(const float& dt) {
 	// Move right
 	if (Keyboard::isKeyPressed(Keyboard::D)) {
 		move(Vector2f(playerSpeed * dt, 0));
+	}
+
+	// Check we are trying to fire and the cooldown time has passed
+	if (Keyboard::isKeyPressed(Keyboard::Space)
+		&& dtSinceLastFired >= bulletCooldownSeconds)
+	{
+		// Reset cooldown
+		Bullet::Fire(getPosition(), false);
+		dtSinceLastFired = 0.f;
+	}
+
+	for (const auto b : bullets) {
+		b->Update(dt);
 	}
 }

@@ -30,6 +30,8 @@ class Invader : public Ship {
 class Player : public Ship {
 	private:
 		float playerSpeed = 80.f;
+		float bulletCooldownSeconds = 1.f;
+		float dtSinceLastFired;
 	public:
 		Player();
 		void Update(const float& dt) override;
