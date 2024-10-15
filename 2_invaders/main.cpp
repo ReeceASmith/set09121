@@ -11,8 +11,6 @@ using namespace sf;
 using namespace std;
 
 const int spriteSizeSquarePx = 32;
-int invaderRows = 6;
-const int invaderColumns = 20;
 
 const array<pair<int, int>, 6> invaderSprites = {{
 	make_pair(0, 0),
@@ -29,12 +27,13 @@ float scaledRAND_MAX = RAND_MAX / numInvaderSprites;
 
 // Grid needs to be larger than the number of sprites in a row
 const float gridScale = .9f;
-int invaderGridColumns = static_cast<int>(invaderColumns * gridScale);
-int minWidthHeight = static_cast<int>(gridScale * fmin(gameWidth / invaderColumns, gameHeight / 2 / invaderRows));
+int invaderGridColumns = static_cast<int>(invaders_columns * gridScale);
+int minWidthHeight = static_cast<int>(gridScale * fmin(gameWidth / invaders_columns, gameHeight / 2 / invaders_rows));
 
 
 sf::Texture spritesheet;
 std::vector<Ship*> ships;
+Player* player;
 
 
 
@@ -47,7 +46,7 @@ void Load() {
 
 
 
-	for (int i = 0; i < invaderRows * invaderColumns; i++) {
+	for (int i = 0; i < invaders_rows * invaders_columns; i++) {
 		randomInvaderSprite = static_cast<int>(rand() / scaledRAND_MAX);
 		pair<int, int> thisInvaderSprite = invaderSprites[randomInvaderSprite];
 
@@ -55,9 +54,9 @@ void Load() {
 		thisInvaderSprite.second *= spriteSizeSquarePx;
 
 
-		float posx = i % invaderColumns;
+		float posx = i % invaders_columns;
 		posx *= minWidthHeight;
-		float posy = floor(i / invaderColumns);
+		float posy = floor(i / invaders_columns);
 		posy *= minWidthHeight;
 
 		posx += static_cast<int>(minWidthHeight / 2);
@@ -82,7 +81,8 @@ void Load() {
 
 
 	// Load player
-	ships.push_back(new Player());
+	player = new Player();
+	ships.push_back(player);
 	Bullet::Init();
 }
 
@@ -110,7 +110,7 @@ void Update(RenderWindow& window) {
 void Render(RenderWindow& window) {
 	// Draw everything
 	for (const auto s : ships) {
-		window.draw(*s);
+		if (s->is_alive()) { window.draw(*s); }
 	}
 	Bullet::Render(window);
 }
