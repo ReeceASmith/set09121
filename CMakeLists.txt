@@ -22,6 +22,12 @@ add_custom_target(copy_resources ALL
 	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/res
 )
 
+#### Base project ####
+file(GLOB_RECURSE SOURCES 0_base/*.cpp 0_base/*.h)
+add_executable(0_BASE ${SOURCES})
+target_include_directories(0_BASE PRIVATE ${SFML_INCS})
+set(EXECUTABLES ${EXECUTABLES} 0_BASE)
+
 #### Practical 1 ####
 file(GLOB_RECURSE SOURCES practical_1/*.cpp practical_1/*.h)
 add_executable(PRACTICAL_1 ${SOURCES})
