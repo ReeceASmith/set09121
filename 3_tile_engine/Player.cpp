@@ -2,17 +2,29 @@
 using namespace std;
 using namespace sf;
 
+
 void Player::Update(double dt) {
-	if (Keyboard::isKeyPressed(Keyboard::Up)) {
+	if (Keyboard::isKeyPressed(Keyboard::Up)
+		|| Keyboard::isKeyPressed(Keyboard::W))
+	{
 		move(Vector2f(0, -_speed * dt));
 	}
-	if (Keyboard::isKeyPressed(Keyboard::Down)) {
+
+	if (Keyboard::isKeyPressed(Keyboard::Down)
+		|| Keyboard::isKeyPressed(Keyboard::S))
+	{
 		move(Vector2f(0, _speed * dt));
 	}
-	if (Keyboard::isKeyPressed(Keyboard::Left)) {
+
+	if (Keyboard::isKeyPressed(Keyboard::Left) 
+		|| Keyboard::isKeyPressed(Keyboard::A))
+	{
 		move(Vector2f(-_speed * dt, 0));
 	}
-	if (Keyboard::isKeyPressed(Keyboard::Right)) {
+
+	if (Keyboard::isKeyPressed(Keyboard::Right)
+		|| Keyboard::isKeyPressed(Keyboard::D))
+	{
 		move(Vector2f(_speed * dt, 0));
 	}
 
